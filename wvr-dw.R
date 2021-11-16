@@ -2,6 +2,7 @@
 # libraries needed
 library(tidyverse) 
 library(ggplot2)
+library(modelr) 
 
 # ================================= DATA TIDYING/WRANGLING ===================================
 # saving all datasets to corresponding data names 
@@ -12,11 +13,10 @@ data3 <- read_csv("/Users/nurhalizahassan/Desktop/World-Vaccination-Rates---Line
 # data 1 - time_series_covid19_vaccine_doses_admin_global.csv
 # note: the following commands are by parts
 revised_data1 <- data1 %>% select(-'UID', -'iso2', -'code3', -'FIPS', -'Admin2', -'Province_State', -'Lat', -'Long_', -'Combined_Key')
-revised_data1 <- revised_data1[!is.na(revised_data1$Population)]
+revised_data1 <- revised_data1[!is.na(revised_data1$Population),]
 revised_data1 <- revised_data1 %>% pivot_longer(-c(iso3, Country_Region, Population), names_to = "Date", values_to = "Shots", values_drop_na = TRUE) %>% filter(Shots != 0) 
 revised_data1 <- revised_data1 %>% mutate(Vaccination_Rate = Shots / Population) %>% mutate(New_Date = revised_data1$Date %>% as.Date()) %>% select(-Date)
 
-# colnames(v) <- c("Country_Region","First_Day")
 rdata1_newvar <- revised_data1 %>% select(Country_Region, New_Date) %>% group_by(Country_Region) %>% slice(which.min(New_Date))
 colnames(rdata1_newvar) <- c("Country_Region","First_Day")
 revised_data1 <- revised_data1 %>% left_join(rdata1_newvar)
@@ -65,7 +65,10 @@ model_5 = summary(lm(formula = Vaccination_Rate ~ SP.POP.80UP + SP.POP.65UP.IN, 
 models <- data.frame(mod = c(1,2,3,4,5), r2 = c(model_1, model_2, model_3, model_4, model_5))
 
 plot_data <- final_data %>% group_by(Country_Region) %>% slice_max(daysSinceStart)
-ggplot(plot_data) + geom_point(mapping = aes(x=daysSinceStart, y=Vaccination_Rate)) + scale_x_continuous(limits=c(225,300), breaks=seq(225,300,10))
+ggplot(plot_data) + geom_point(mapping = aes(x=daysSinceStart, y=Vaccination_Rate)) + scale_x_continuous(limits=c(225, 345), breaks=seq(225, 345, 10)) + scale_y_continuous(limits=c(0.0, 2.0), breaks=seq(0.0, 2.0, 0.2))
 ggplot(models, aes(x=mod,y=r2)) + geom_bar(stat="identity") + scale_y_continuous(limits=c(0,1))
 
-
+# same scatterplot as line 67 - only difference: this one includes line of best fit
+# modelPred <- lm(Vaccination_Rate ~ daysSinceStart, data = plot_data)
+# plot_data <- plot_data %>% add_predictions(modelPred) %>% View()
+# ggplot(plot_data) + geom_point(mapping = aes(x=daysSinceStart, y=Vaccination_Rate)) + scale_x_continuous(limits=c(225, 345), breaks=seq(225, 345, 10)) + scale_y_continuous(limits=c(0.0, 2.0), breaks=seq(0.0, 2.0, 0.2)) + geom_line(mapping=aes(x=daysSinceStart, y=pred))
