@@ -9,4 +9,6 @@ The following project uses the R language and RStudio environment. It uses three
 # STRUCTURE:
 There are two major components that had to be completed prior to further analyzing and deducing the data to find the worldwide vaccination rates. Data tidying/wrangling and linear modeling are the two foundational steps in this project (and across the board for other data science projects). 
 
-Data tidying/wrangling is the process of cleaning up data(sets) by either removing and/or rearranging data to best fit the objectives of the project. Each of the three datasets had to undergo this process to ensure concise and proper preparation for the linear modeling aspect of the project. Upon finishing this process, ..... (will finish this part when linear modeling is done .. ).
+Data tidying/wrangling is the process of cleaning up data(sets) by either removing and/or rearranging data to best fit the objectives of the project. Each of the three datasets had to undergo this process to ensure concise and proper preparation for the linear modeling aspect of the project. Upon finishing this process, various variables will .
+
+Linear modeling is the process of describing and analyzing the continuous response variables as a function of one or more explanatory variables. It enables further understanding in predicting the behavior of datasets we choose to analyze and focus on.
